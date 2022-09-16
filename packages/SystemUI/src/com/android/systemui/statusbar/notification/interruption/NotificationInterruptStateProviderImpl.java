@@ -333,11 +333,6 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
     }
 
     @Override
-    public void setGamingPeekMode(boolean skipHeadsUp) {
-        mSkipHeadsUp = skipHeadsUp;
-    }
-
-    @Override
     public void setUseLessBoringHeadsUp(boolean lessBoring) {
         mLessBoringHeadsUp = lessBoring;
     }

@@ -338,7 +338,6 @@ import com.android.internal.util.FastPrintWriter;
 import com.android.internal.util.FrameworkStatsLog;
 import com.android.internal.util.MemInfoReader;
 import com.android.internal.util.Preconditions;
-import com.android.internal.util.crdroid.GamingModeController;
 import com.android.internal.util.function.HeptFunction;
 import com.android.internal.util.function.QuadFunction;
 import com.android.internal.util.function.TriFunction;
@@ -1683,8 +1682,6 @@ public class ActivityManagerService extends IActivityManager.Stub
     private ParcelFileDescriptor[] mLifeMonitorFds;
 
     static final HostingRecord sNullHostingRecord = new HostingRecord(null);
-
-    private GamingModeController mGamingModeController;
 
     final SwipeToScreenshotObserver mSwipeToScreenshotObserver;
     private boolean mIsSwipeToScrenshotEnabled;
@@ -6186,7 +6183,7 @@ public class ActivityManagerService extends IActivityManager.Stub
         // not be quite right -- it means that even if the caller would have access for another
         // reason (such as being the owner of the component it is trying to access), it would still
         // fail.  This also means the system and root uids would be able to deny themselves
-        // access to permissions, which...  well okay. ¯\_(ツ)_/¯
+        // access to permissions, which...  well okay. ￣\_(ツ)_/￣
         if (permission != null) {
             synchronized (sActiveProcessInfoSelfLocked) {
                 ProcessInfo procInfo = sActiveProcessInfoSelfLocked.get(pid);
@@ -7947,8 +7944,6 @@ public class ActivityManagerService extends IActivityManager.Stub
 
         //mUsageStatsService.monitorPackages();
 
-        // Gaming mode provider
-        mGamingModeController = new GamingModeController(mContext);
 
         mSystemSensorManager = new SystemSensorManager(mContext, mHandler.getLooper());
     }
@@ -16232,9 +16227,6 @@ public class ActivityManagerService extends IActivityManager.Stub
                                         mServices.forceStopPackageLocked(ssp, userId);
                                         mAtmInternal.onPackageUninstalled(ssp);
                                         mBatteryStatsService.notePackageUninstalled(ssp);
-                                        if (mGamingModeController != null) {
-                                             mGamingModeController.notePackageUninstalled(ssp);
-                                        }
                                         if (mSystemSensorManager != null) {
                                            mSystemSensorManager.notePackageUninstalled(ssp);
                                         }
@@ -17974,17 +17966,6 @@ public class ActivityManagerService extends IActivityManager.Stub
             } finally {
                 Binder.restoreCallingIdentity(identity);
             }
-
-            if (mCurResumedPackage != null && mGamingModeController != null && mGamingModeController.isGamingModeEnabled()) {
-                if (mGamingModeController.topAppChanged(mCurResumedPackage) && !mGamingModeController.isGamingModeActivated()) {
-                    Settings.System.putInt(mContext.getContentResolver(),
-                        Settings.System.GAMING_MODE_ACTIVE, 1);
-                } else if (!mGamingModeController.topAppChanged(mCurResumedPackage) && 
-                        mGamingModeController.isGamingModeActivated()) {
-                    Settings.System.putInt(mContext.getContentResolver(),
-                        Settings.System.GAMING_MODE_ACTIVE, 0);
-                }
-           }
         }
         return r;
     }

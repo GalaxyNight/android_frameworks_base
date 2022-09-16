@@ -315,10 +315,6 @@ public class StatusBar extends SystemUI implements DemoMode,
             "system:" + Settings.System.QS_COLUMNS_LANDSCAPE;
     private static final String QS_TILE_TITLE_VISIBILITY =
             "system:" + Settings.System.QS_TILE_TITLE_VISIBILITY;
-    private static final String GAMING_MODE_ACTIVE =
-            "system:" + Settings.System.GAMING_MODE_ACTIVE;
-    private static final String GAMING_MODE_HEADSUP_TOGGLE =
-            "system:" + Settings.System.GAMING_MODE_HEADSUP_TOGGLE;
     private static final String LESS_BORING_HEADS_UP =
             "system:" + Settings.System.LESS_BORING_HEADS_UP;
     private static final String NAVBAR_STYLE =
@@ -561,7 +557,6 @@ public class StatusBar extends SystemUI implements DemoMode,
 
     private final DisplayMetrics mDisplayMetrics;
 
-    private boolean mHeadsUpDisabled, mGamingModeActivated;
     private boolean mlessBoringHeadsUp;
 
     // XXX: gesture research
@@ -1041,8 +1036,6 @@ public class StatusBar extends SystemUI implements DemoMode,
         mTunerService.addTunable(this, QS_COLUMNS_PORTRAIT);
         mTunerService.addTunable(this, QS_COLUMNS_LANDSCAPE);
         mTunerService.addTunable(this, QS_TILE_TITLE_VISIBILITY);
-        mTunerService.addTunable(this, GAMING_MODE_ACTIVE);
-        mTunerService.addTunable(this, GAMING_MODE_HEADSUP_TOGGLE);
         mTunerService.addTunable(this, LESS_BORING_HEADS_UP);
         mTunerService.addTunable(this, NAVBAR_STYLE);
         mTunerService.addTunable(this, QS_PANEL_BG_USE_NEW_TINT);
@@ -2139,8 +2132,8 @@ public class StatusBar extends SystemUI implements DemoMode,
      * or not when showing the bouncer.
      *
      * We want to hide it when:
-     * • User swipes up on the keyguard
-     * • Locked activity that doesn't show a status bar requests the bouncer
+     * ? User swipes up on the keyguard
+     * ? Locked activity that doesn't show a status bar requests the bouncer
      *
      * @param animate should the change of the icons be animated.
      */
@@ -5176,16 +5169,6 @@ public class StatusBar extends SystemUI implements DemoMode,
                 if (mQSPanel != null) {
                     mQSPanel.getHost().reloadAllTiles();
                 }
-                break;
-            case GAMING_MODE_ACTIVE:
-                mGamingModeActivated =
-                        TunerService.parseIntegerSwitch(newValue, false);
-                mNotificationInterruptStateProvider.setGamingPeekMode(mGamingModeActivated && mHeadsUpDisabled);
-                break;
-            case GAMING_MODE_HEADSUP_TOGGLE:
-                mHeadsUpDisabled =
-                        TunerService.parseIntegerSwitch(newValue, true);
-                mNotificationInterruptStateProvider.setGamingPeekMode(mGamingModeActivated && mHeadsUpDisabled);
                 break;
             case LESS_BORING_HEADS_UP:
                 mlessBoringHeadsUp = 
