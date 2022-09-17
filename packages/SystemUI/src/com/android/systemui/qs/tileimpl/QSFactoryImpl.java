@@ -221,7 +221,6 @@ public class QSFactoryImpl implements QSFactory {
         mWeatherTileProvider = weatherTileProvider;
         mCPUInfoTileProvider = cpuInfoTileProvider;
         mFPSInfoTileProvider = fpsInfoTileProvider;
-        mGamingModeTileProvider = gamingModeTileProvider;
         mSmartPixelsTileProvider = smartPixelsTileProvider;
         mRebootTileProvider = rebootTileProvider;
         mSoundSearchTileProvider = soundSearchTileProvider;
