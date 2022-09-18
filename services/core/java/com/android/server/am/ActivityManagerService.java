@@ -336,6 +336,7 @@ import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.DumpUtils;
 import com.android.internal.util.FastPrintWriter;
 import com.android.internal.util.FrameworkStatsLog;
+import com.android.internal.util.GamingModeHelper;
 import com.android.internal.util.MemInfoReader;
 import com.android.internal.util.Preconditions;
 import com.android.internal.util.function.HeptFunction;
@@ -1965,6 +1966,10 @@ public class ActivityManagerService extends IActivityManager.Stub
                 synchronized (ActivityManagerService.this) {
                     mProcessList.handleAllTrustStorageUpdateLocked();
                 }
+            } break;
+            case GamingModeHelper.MSG_SEND_GAMING_MODE_BROADCAST: {
+                Intent intent = (Intent) msg.obj;
+                mContext.sendBroadcastAsUser(intent, UserHandle.CURRENT_OR_SELF);
             } break;
             }
         }
@@ -7946,6 +7951,8 @@ public class ActivityManagerService extends IActivityManager.Stub
 
 
         mSystemSensorManager = new SystemSensorManager(mContext, mHandler.getLooper());
+        mActivityTaskManager.mGamingModeHelper.setAmsHandler(mHandler);
+
     }
 
     void startPersistentApps(int matchFlags) {
